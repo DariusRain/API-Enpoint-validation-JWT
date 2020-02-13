@@ -8,3 +8,5 @@
     6. Solve the identical email problem.
     7. Hash password keeping plain text is a security risk. (Use bcryptjs npm package)
     8. Add login route similar to the register route starting off.
+    9. Implement JSON Web Tokens using npm package 'jsonwebtoken' and
+    add that generated token to the header of he response.
