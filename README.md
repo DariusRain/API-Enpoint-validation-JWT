@@ -6,3 +6,4 @@
     4. Use the validation from Joi before a post gets saved to the database.
     5. Create external files for the joi validation schemas to shorten up code & have the same output.
     6. Solve the identical email problem.
+    7. Hash password keeping plain text is a security risk. (Use bcryptjs npm package)
