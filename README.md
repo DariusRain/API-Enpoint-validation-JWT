@@ -5,4 +5,4 @@
     3. Validate information from the request using Joi. ( Joi Schemas & schema.validate() )
     4. Use the validation from Joi before a post gets saved to the database.
     5. Create external files for the joi validation schemas to shorten up code & have the same output.
-    
+    6. Solve the identical email problem.
