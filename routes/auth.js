@@ -4,7 +4,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 
 //Import Validation
-const { registerValidation } = require("../validation");
+const { registerValidation, loiginValidation } = require("../validation");
 
 router.post("/register", async (req, res) => {
   const { error } = registerValidation(req.body);
@@ -13,13 +13,9 @@ router.post("/register", async (req, res) => {
   const emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) return res.status(400).send("Email Exists");
 
-  //Hash password with a salt
-  //Salt is a random string that is used add extra string to the allready hashed
-  //Password to make it harder to decode
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  //Add hashedPassword to databse schema
   const user = new User({
     name: req.body.name,
     email: req.body.email,
@@ -27,10 +23,30 @@ router.post("/register", async (req, res) => {
   });
   try {
     const savedUser = await user.save();
-    res.status(201).send(savedUser); //Resolved
+    res.status(201).send({user: user._id}); //Resolved
   } catch (err) {
     res.status(401).send(err); //Rejected
   }
 });
 
+
+//Login
+
+
+router.post("/login", async (req, res) => {
+
+    //Use the login validation Joi schema from the validation.js file
+    const { error } = loiginValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    //Check if email is a email registered
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("Ivalid Username and or Password");  
+
+    //Validate password with bcrypt.compare
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+    if(!validPassword) return res.status(400).send("Invalid Username and or Password")
+
+    res.send('Logged in!')
+})
 module.exports = router;
